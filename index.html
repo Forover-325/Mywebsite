@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="愿 · 个人名片，一个堆放杂物的小站。">
+<title>愿 · 个人名片</title>
+
+<!-- 图标库：Font Awesome -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+
+<style>
+  /* ===== 基础变量 ===== */
+  :root {
+    --primary: #5B8DEF;
+    --primary-dark: #4A90D9;
+    --text: #2b3440;
+    --text-soft: #4b5563;
+    --muted: #8b95a5;
+    --bg: #f7f9fc;
+    --card: #ffffff;
+    --border: #e8edf5;
+    --shadow-sm: 0 4px 24px rgba(31, 45, 61, .05);
+    --shadow-md: 0 10px 30px rgba(91, 141, 239, .22);
+    --radius: 18px;
+    --nav-h: 64px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--nav-h);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text-soft);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a { -webkit-tap-highlight-color: transparent; }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* ===== 顶部导航栏 ===== */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, .82);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: box-shadow .3s ease, border-color .3s ease;
+  }
+  .nav.scrolled {
+    border-bottom-color: var(--border);
+    box-shadow: 0 2px 18px rgba(31, 45, 61, .06);
+  }
+
+  .nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    height: var(--nav-h);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+    letter-spacing: .06em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    position: relative;
+    display: inline-block;
+    padding: 4px 0;
+    font-size: .95rem;
+    color: #5a6472;
+    text-decoration: none;
+    transition: color .25s ease;
+  }
+
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--primary);
+    transition: width .28s ease;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active { color: var(--primary); }
+
+  .nav-links a:hover::after,
+  .nav-links a.active::after { width: 100%; }
+
+  /* ===== 首页 / 头像区 ===== */
+  .hero {
+    min-height: calc(100vh - var(--nav-h));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px 80px;
+  }
+
+  .avatar-wrap {
+    position: relative;
+    width: 144px;
+    height: 144px;
+    animation: popIn .8s cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .avatar-wrap::before {
+    content: "";
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91, 141, 239, .18), rgba(91, 141, 239, 0) 70%);
+    z-index: 0;
+  }
+
+  .avatar {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #e8edf5;
+    border: 4px solid #fff;
+    box-shadow: var(--shadow-md);
+  }
+
+  .hero h1 {
+    margin-top: 28px;
+    font-size: clamp(2.1rem, 7vw, 3.2rem);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: .1em;
+    text-indent: .1em;
+    animation: fadeUp .8s .1s cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .hero .tagline {
+    margin-top: 12px;
+    font-size: 1.02rem;
+    color: var(--muted);
+    animation: fadeUp .8s .2s cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .hero-actions {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    animation: fadeUp .8s .3s cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 28px;
+    border-radius: 999px;
+    font-size: .95rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .22s ease, box-shadow .28s ease, background .25s ease,
+                color .25s ease, border-color .25s ease;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(91, 141, 239, .32);
+  }
+  .btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(91, 141, 239, .4);
+  }
+
+  .btn-ghost {
+    background: #fff;
+    color: var(--primary);
+    border-color: #dbe5f5;
+  }
+  .btn-ghost:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(91, 141, 239, .16);
+  }
+
+  /* ===== 通用区块 ===== */
+  .section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 24px 80px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: .06em;
+  }
+
+  .section-sub {
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 32px;
+    font-size: .78rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #b3bcc9;
+  }
+
+  .card {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 36px 38px;
+  }
+
+  .card p + p { margin-top: 16px; }
+
+  .card strong {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--border);
+    list-style: none;
+  }
+
+  .tags li {
+    padding: 5px 15px;
+    font-size: .84rem;
+    color: var(--primary);
+    background: rgba(91, 141, 239, .08);
+    border-radius: 999px;
+    line-height: 1.6;
+  }
+
+  /* ===== 联系我 ===== */
+  .contact-text {
+    text-align: center;
+    color: var(--muted);
+    font-size: .95rem;
+    margin-top: -12px;
+    margin-bottom: 30px;
+  }
+
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .social-link {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid var(--border);
+    color: #7b8794;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: transform .25s ease, background .25s ease, color .25s ease,
+                border-color .25s ease, box-shadow .28s ease;
+  }
+
+  .social-link:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 22px rgba(91, 141, 239, .3);
+  }
+
+  /* ===== 页脚 ===== */
+  .footer {
+    padding: 34px 24px;
+    text-align: center;
+    font-size: .84rem;
+    color: #a5aebc;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ===== 滚动出现动画 ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 640px) {
+    :root { --nav-h: 58px; }
+
+    .nav-inner { padding: 0 18px; }
+    .logo { font-size: 1.1rem; }
+    .nav-links { gap: 20px; }
+    .nav-links a { font-size: .9rem; }
+
+    .hero { padding: 44px 20px 64px; }
+    .avatar-wrap { width: 116px; height: 116px; }
+    .hero h1 { margin-top: 22px; }
+    .hero .tagline { font-size: .94rem; }
+    .btn { padding: 10px 22px; font-size: .9rem; }
+
+    .section { padding: 10px 18px 60px; }
+    .card { padding: 26px 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== 顶部导航栏 ===== -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="#home" class="logo">愿</a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#home" class="active">首页</a></li>
+          <li><a href="#about">关于我</a></li>
+          <li><a href="#contact">联系我</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== 首页 ===== -->
+    <section id="home" class="hero">
+      <div class="avatar-wrap">
+        <img class="avatar"
+             src="https://i.pravatar.cc/280?img=12"
+             alt="愿的头像"
+             onerror="this.onerror=null;this.src='https://placehold.co/280x280/e8edf5/5B8DEF?text=Yuan';">
+      </div>
+
+      <h1>愿</h1>
+      <p class="tagline">这里是一些堆放杂物的网站</p>
+
+      <div class="hero-actions">
+        <a href="#about" class="btn btn-primary">
+          <i class="fa-solid fa-user"></i> 认识我
+        </a>
+        <a href="#contact" class="btn btn-ghost">
+          <i class="fa-regular fa-paper-plane"></i> 联系我
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== 关于我 ===== -->
+    <section id="about" class="section reveal">
+      <h2 class="section-title">关于我</h2>
+      <p class="section-sub">About Me</p>
+
+      <div class="card">
+        <p>你好，我是<strong>愿</strong>，一个喜欢折腾、也享受安静的人。</p>
+        <p>
+          平时我喜欢把零散的想法慢慢做成看得见的东西——写点代码、整理笔记，
+          或者随手记录生活里的小片段。我相信持续的小努力会带来改变，
+          也愿意花时间打磨细节，把每件事做到自己满意的样子。
+        </p>
+        <p>
+          希望能在这里留下一点自己的痕迹，也期待与有趣的你相遇。
+        </p>
+
+        <ul class="tags">
+          <li>前端开发</li>
+          <li>界面设计</li>
+          <li>摄影</li>
+          <li>阅读</li>
+          <li>咖啡</li>
+          <li>慢生活</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 联系我 ===== -->
+    <section id="contact" class="section reveal">
+      <h2 class="section-title">联系我</h2>
+      <p class="section-sub">Get in Touch</p>
+      <p class="contact-text">欢迎通过下面的方式找到我，一起聊聊有趣的事。</p>
+
+      <div class="socials">
+        <a href="#" class="social-link" aria-label="GitHub" title="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        <a href="#" class="social-link" aria-label="X" title="X">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        <a href="#" class="social-link" aria-label="微信" title="微信">
+          <i class="fa-brands fa-weixin"></i>
+        </a>
+        <a href="#" class="social-link" aria-label="邮箱" title="邮箱">
+          <i class="fa-solid fa-envelope"></i>
+        </a>
+        <a href="#" class="social-link" aria-label="博客" title="博客">
+          <i class="fa-solid fa-link"></i>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== 页脚 ===== -->
+  <footer class="footer">
+    © 2026 XBAOS
+  </footer>
+
+  <script>
+    (function () {
+      var nav = document.querySelector('.nav');
+      var links = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+      var sections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
+
+      /* 滚动时：导航栏阴影 + 当前菜单高亮 */
+      function onScroll() {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+
+        var pos = window.scrollY + 130;
+        var current = sections.length ? sections[0].id : '';
+        sections.forEach(function (sec) {
+          if (sec.offsetTop <= pos) current = sec.id;
+        });
+
+        links.forEach(function (a) {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      onScroll();
+
+      /* 滚动进入视口时淡入 */
+      var reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
+      } else {
+        Array.prototype.forEach.call(reveals, function (el) { el.classList.add('visible'); });
+      }
+    })();
+  </script>
+</body>
+</html>
